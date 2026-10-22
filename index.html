@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>آموزش هشتم | بردیا عزیزی</title>
+<style>
+body{
+  margin:0;
+  font-family:Tahoma,sans-serif;
+  background:linear-gradient(135deg,#071b33,#075e54);
+  color:white;text-align:center;
+}
+header{padding:25px 10px;background:#061426}
+h1{color:#00ffcc}
+.container{max-width:650px;margin:auto;padding:15px}
+.card{
+  background:#ffffff12;padding:20px;margin:15px 0;
+  border:1px solid #00ffcc55;border-radius:18px;
+}
+button{
+  background:#00d6a0;color:#002b27;border:0;
+  padding:12px 18px;margin:6px;border-radius:10px;
+  font-size:16px;cursor:pointer;font-weight:bold;
+}
+button:hover{background:#00ffcc}
+#question{font-size:19px;line-height:2}
+#result{color:#ffe66d;line-height:2}
+footer{padding:25px;color:#a8fff0}
+</style>
+</head>
+<body>
+
+<header>
+<h1>🎓 آکادمی بردیا</h1>
+<h3>سامانه آموزشی پایه هشتم</h3>
+<p>یاد بگیر، تمرین کن و پیشرفت کن! 🚀</p>
+</header>
+
+<div class="container">
+<div class="card">
+<h2>📚 انتخاب درس</h2>
+<button onclick="choose('science')">🔬 علوم</button>
+<button onclick="choose('math')">➗ ریاضی</button>
+<button onclick="choose('english')">🇬🇧 انگلیسی</button>
+<button onclick="choose('persian')">📖 فارسی</button>
+</div>
+
+<div class="card">
+<h2 id="lesson">آزمون هوشمند</h2>
+<p id="question">یک درس انتخاب کن تا آزمون شروع شود!</p>
+<div id="answers"></div>
+<p id="result"></p>
+<button onclick="nextQuestion()">سؤال بعدی ⏭️</button>
+</div>
+
+<div class="card">
+<h2>🏆 امتیاز تو</h2>
+<p id="score">امتیاز: ۰</p>
+<button onclick="resetGame()">شروع دوباره</button>
+</div>
+</div>
+
+<footer>
+<p>طراح و سازنده: بردیا عزیزی</p>
+<p>نسخه آموزشی دانش‌آموزان پایه هشتم</p>
+</footer>
+
+<script>
+const quizzes={
+science:[
+{q:"کدام روش برای جداسازی شن از آب مناسب است؟",
+a:["صاف کردن","تبخیر","تقطیر"],c:0},
+{q:"کدام ماده خالص است؟",
+a:["آب مقطر","خاک","هوا"],c:0},
+{q:"برای جدا کردن نمک حل‌شده از آب چه روشی مناسب است؟",
+a:["الک کردن","تبخیر","آهن‌ربا"],c:1}
+],
+math:[
+{q:"حاصل ۷ × ۸ چند است؟",
+a:["۵۴","۵۶","۶۴"],c:1},
+{q:"حاصل ۱۵ + ۲۷ چیست؟",
+a:["۴۲","۴۰","۴۴"],c:0},
+{q:"اگر x + ۵ = ۱۲ باشد، x چند است؟",
+a:["۵","۷","۸"],c:1}
+],
+english:[
+{q:"معنی کلمه Book چیست؟",
+a:["کتاب","مداد","مدرسه"],c:0},
+{q:"کدام گزینه به معنی ایران است؟",
+a:["Iran","Iraqi","Italian"],c:0},
+{q:"جای خالی را کامل کن: I ___ a student.",
+a:["am","is","are"],c:0}
+],
+persian:[
+{q:"مخالف کلمه دانا چیست؟",
+a:["آگاه","نادان","هوشیار"],c:1},
+{q:"کدام واژه مترادف شادی است؟",
+a:["اندوه","خشم","خوشحالی"],c:2},
+{q:"کدام مورد اسم است؟",
+a:["زیبا","مدرسه","دوید"],c:1}
+]
+};
+
+let currentLesson="science",index=0,score=0,answered=false;
+
+function choose(lesson){
+currentLesson=lesson;
+index=0;
+showQuestion();
+}
+
+function showQuestion(){
+const quiz=quizzes[currentLesson];
+if(index>=quiz.length){
+document.getElementById("lesson").textContent="پایان آزمون 🎉";
+document.getElementById("question").textContent="آفرین! آزمون این درس تمام شد.";
+document.getElementById("answers").innerHTML="";
+document.getElementById("result").textContent=
+"امتیاز فعلی: "+score;
+answered=true;
+return;
+}
+answered=false;
+const item=quiz[index];
+document.getElementById("lesson").textContent=
+({science:"آزمون علوم",math:"آزمون ریاضی",
+english:"آزمون انگلیسی",persian:"آزمون فارسی"})[currentLesson];
+document.getElementById("question").textContent=
+(index+1)+". "+item.q;
+document.getElementById("result").textContent="";
+document.getElementById("answers").innerHTML="";
+item.a.forEach((answer,i)=>{
+const btn=document.createElement("button");
+btn.textContent=answer;
+btn.onclick=()=>checkAnswer(i);
+document.getElementById("answers").appendChild(btn);
+});
+}
+
+function checkAnswer(choice){
+if(answered)return;
+answered=true;
+const item=quizzes[currentLesson][index];
+if(choice===item.c){
+score+=10;
+document.getElementById("result").textContent="✅ آفرین! پاسخ درست است.";
+}else{
+document.getElementById("result").textContent=
+"❌ پاسخ درست: "+item.a[item.c];
+}
+document.getElementById("score").textContent="امتیاز: "+score;
+}function nextQuestion(){
+if(!answered){
+document.getElementById("result").textContent=
+"اول به سؤال جواب بده!";
+return;
+}
+index++;
+showQuestion();
+}
+
+function resetGame(){
+score=0;
+index=0;
+document.getElementById("score").textContent="امتیاز: ۰";
+showQuestion();
+}
+</script>
+</body>
+</html>
